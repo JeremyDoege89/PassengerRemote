@@ -1,0 +1,20 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.kotlin/
+.cxx/
+.externalNativeBuild/
+captures/
+# Signing secrets and binaries
+keystore.properties
+*.jks
+*.keystore
+*.p12
+*.pk8
+*.apk
+*.aab
+*.idsig
+*.log
+__pycache__/

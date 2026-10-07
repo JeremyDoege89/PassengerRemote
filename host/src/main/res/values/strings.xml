@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_listener_label">Passenger Remote media access</string>
+    <string name="host_channel_name">Remote host</string>
+    <string name="host_notification_title">Passenger Remote is running</string>
+</resources>

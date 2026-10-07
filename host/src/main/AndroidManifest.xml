@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The listener is never used to read notification *content*. It exists
+         because an enabled NotificationListenerService is the only rootless way
+         a third-party app may call MediaSessionManager.getActiveSessions(). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Optional. The app is fully functional without Shizuku; this only lets it
+         ask, so the voice button can send the real voice-assist key instead of
+         an intent the system may ignore. -->
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+
+    <application>
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <service
+            android:name=".media.MediaNotificationListener"
+            android:exported="true"
+            android:label="@string/notification_listener_label"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Both types are declared, but the service passes ONE explicitly to
+             startForeground() at runtime.
+
+             That matters: the system validates every type it is given, and
+             connectedDevice additionally requires a granted Bluetooth/Wi-Fi
+             permission. Declaring both and letting the system infer them was an
+             early crash-on-launch bug, because a self-remote-only user holds
+             none of those and has no connected device either. See
+             RemoteHostService.foregroundTypes(). -->
+        <service
+            android:name=".service.RemoteHostService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback|connectedDevice" />
+    </application>
+</manifest>
